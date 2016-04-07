@@ -44,9 +44,11 @@ virt_ADDRS() {
 #    virsh -c qemu:///system list --all | grep -o '[0-9]* [a-z]*.*running' | while read -r line;
 # DEBUG: The sed line breaks when the vmcnt goes double digit, like this
 #        echo " 12    centos72_1                     running" | sed ...
+#     replaced SED with AWK
     virsh list --all | grep -o '[0-9]* [a-z]*.*running' | while read -r line;
     do
-        line_cropped=$(echo "$line" | sed 's/[0-9][ ]*\([-._0-9a-zA-Z]*\)[ ]*running/\1/' );
+#        line_cropped=$(echo "$line" | sed 's/[0-9][ ]*\([-._0-9a-zA-Z]*\)[ ]*running/\1/' );
+        line_cropped=$(echo "$line" | awk '{print $2}' );
         printf "%-30s %s\n" "$line_cropped" $( virt_ADDR "$line_cropped" );
     done;
     echo "----------------------------------------------";
